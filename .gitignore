@@ -1,0 +1,11 @@
+# Visual Studio cache files
+.vs/
+ipch/
+*.aps
+*.cachefile
+*.VC.db
+*.opendb
+*.opensdf
+*.user
+*.sdf
+*.suo
