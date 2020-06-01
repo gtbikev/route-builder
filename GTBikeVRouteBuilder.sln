@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GTBikeVRouteBuilder", "GTBikeVRouteBuilder.vbproj", "{7450FEA3-F7CD-4144-8C0A-09E95305E346}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7450FEA3-F7CD-4144-8C0A-09E95305E346}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{7450FEA3-F7CD-4144-8C0A-09E95305E346}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{7450FEA3-F7CD-4144-8C0A-09E95305E346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7450FEA3-F7CD-4144-8C0A-09E95305E346}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2F79958D-B244-4C27-996E-A5A0480FC16B}
+	EndGlobalSection
+EndGlobal
