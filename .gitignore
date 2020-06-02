@@ -1,11 +1,14 @@
 # Visual Studio cache files
 .vs/
+bin/
 ipch/
+obj/
 *.aps
 *.cachefile
 *.VC.db
 *.opendb
 *.opensdf
+*.png
 *.user
 *.sdf
 *.suo

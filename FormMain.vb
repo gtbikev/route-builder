@@ -66,7 +66,7 @@ Public Class FormMain
             strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & Chr(34) & "Rotation" & Chr(34) & ": {" : intRowCounter = intRowCounter + 1
             strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & strWhitespace & Chr(34) & "X" & Chr(34) & ": " & "0.0" & "," : intRowCounter = intRowCounter + 1
             strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & strWhitespace & Chr(34) & "Y" & Chr(34) & ": " & "0.0" & "," : intRowCounter = intRowCounter + 1
-            strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & strWhitespace & Chr(34) & "Z" & Chr(34) & ": " & "75.0" : intRowCounter = intRowCounter + 1
+            strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & strWhitespace & Chr(34) & "Z" & Chr(34) & ": " & "0.0" : intRowCounter = intRowCounter + 1
             strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & "}" : intRowCounter = intRowCounter + 1
 
             'Add close bracket
@@ -89,7 +89,7 @@ Public Class FormMain
             strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & Chr(34) & "Rotation" & Chr(34) & ": {" : intRowCounter = intRowCounter + 1
             strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & strWhitespace & Chr(34) & "X" & Chr(34) & ": " & "0.0" & "," : intRowCounter = intRowCounter + 1
             strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & strWhitespace & Chr(34) & "Y" & Chr(34) & ": " & "0.0" & "," : intRowCounter = intRowCounter + 1
-            strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & strWhitespace & Chr(34) & "Z" & Chr(34) & ": " & "75.0" : intRowCounter = intRowCounter + 1
+            strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & strWhitespace & Chr(34) & "Z" & Chr(34) & ": " & "0.0" : intRowCounter = intRowCounter + 1
             strJson(intRowCounter) = strWhitespace & strWhitespace & strWhitespace & "}" : intRowCounter = intRowCounter + 1
 
             'Add close bracket
@@ -157,15 +157,18 @@ Public Class FormMain
 
 #Region "Events"
 
-    '-- Buttons
+    '-- Button
 
     Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
-            'Clear open & save textbox
+            'Clear map textboxes
             Me.txtMapEditor.Text = ""
-            Me.txtGtBikeVCourse.Text = ""
+            Me.txtCourse.Text = ""
+
+            'Set control display settings
+            setControlDisplaySettings()
             '--------------------------------------------------------------------------------------
         Catch exp As Exception
             '--------------------------------------------------------------------------------------
@@ -186,10 +189,10 @@ Public Class FormMain
             Dim strOutput As String() = createCourse()
 
             'Save file
-            saveFile(strOutput, Me.SaveFileDialog.FileName)
+            saveFile(strOutput, Me.txtCourse.Text)
 
             'Display status
-            Me.lblStatus.Text = "GT Bike V Course successfully created"
+            Me.lblStatus.Text = "Course file created"
             '--------------------------------------------------------------------------------------
         Catch exp As Exception
             '--------------------------------------------------------------------------------------
@@ -228,17 +231,8 @@ Public Class FormMain
             'Check if ok button has been pressed
             If (Me.OpenFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK) Then
                 '----------------------------------------------------------------------------------
-                'Reset Dataset
-                Me.dsMapEditor.Reset()
-
-                'Read data
-                Me.dsMapEditor.ReadXml(Me.OpenFileDialog.FileName)
-
-                'Set textbox
-                Me.txtMapEditor.Text = Me.OpenFileDialog.FileName
-
-                'Display status
-                Me.lblStatus.Text = "Map Editor File successfully loaded"
+                'Open file
+                openFile("Map Editor", Me.OpenFileDialog.FileName)
                 '----------------------------------------------------------------------------------
             End If
             '--------------------------------------------------------------------------------------
@@ -267,7 +261,7 @@ Public Class FormMain
             Dim strInitialDirectory As String = Environment.SpecialFolder.MyDocuments
 
             'Delare properties
-            Me.SaveFileDialog.Title = "Save GT Bike V Course"
+            Me.SaveFileDialog.Title = "Save Course File"
             Me.SaveFileDialog.DefaultExt = ".json"
             Me.SaveFileDialog.FileName = ""
             Me.SaveFileDialog.Filter = "json files (*.json)|*.json"
@@ -278,11 +272,8 @@ Public Class FormMain
             'Check if ok button has been pressed
             If (Me.SaveFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK) Then
                 '----------------------------------------------------------------------------------
-                'Set textbox
-                Me.txtGtBikeVCourse.Text = Me.SaveFileDialog.FileName
-
-                'Display status
-                Me.lblStatus.Text = "Ready"
+                'Open file
+                openFile("Course", Me.SaveFileDialog.FileName)
                 '----------------------------------------------------------------------------------
             End If
             '--------------------------------------------------------------------------------------
@@ -299,11 +290,169 @@ Public Class FormMain
         '------------------------------------------------------------------------------------------
     End Sub
 
+    '-- Form
+
+    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Set application name and version
+            Me.lblApplication.Text = My.Application.Info.ProductName & " " & System.Windows.Forms.Application.ProductVersion
+
+            'Set control display settings
+            setControlDisplaySettings()
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    '-- Textbox
+
+    Private Sub txtCourse_DragDrop(sender As Object, e As DragEventArgs) Handles txtCourse.DragDrop
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Activate form
+            Me.Activate()
+
+            'Check if drag event args is file
+            If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+                '----------------------------------------------------------------------------------
+                'Declare file info object
+                Dim file As New IO.FileInfo(e.Data.GetData(DataFormats.FileDrop)(0))
+
+                'Verify if file is .xml
+                If file.Extension = ".json" Then
+                    '------------------------------------------------------------------------------
+                    'Open file
+                    openFile("Course", e.Data.GetData(DataFormats.FileDrop)(0))
+                    '------------------------------------------------------------------------------
+                Else
+                    '------------------------------------------------------------------------------
+                    'Display message
+                    Me.lblStatus.Text = "Input file is not a json file"
+                    '------------------------------------------------------------------------------
+                End If
+                '----------------------------------------------------------------------------------
+            End If
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub txtCourse_DragEnter(sender As Object, e As DragEventArgs) Handles txtCourse.DragEnter
+        '------------------------------------------------------------------------------------------
+        'Check if drag event args is file
+        If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+            '--------------------------------------------------------------------------------------
+            'Use copy as drag & drop effect
+            e.Effect = DragDropEffects.Copy
+            '--------------------------------------------------------------------------------------
+        End If
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub txtMapEditor_DragDrop(sender As Object, e As DragEventArgs) Handles txtMapEditor.DragDrop
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Activate form
+            Me.Activate()
+
+            'Check if drag event args is file
+            If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+                '----------------------------------------------------------------------------------
+                'Declare file info object
+                Dim file As New IO.FileInfo(e.Data.GetData(DataFormats.FileDrop)(0))
+
+                'Verify if file is .xml
+                If file.Extension = ".xml" Then
+                    '------------------------------------------------------------------------------
+                    'Open file
+                    openFile("Map Editor", e.Data.GetData(DataFormats.FileDrop)(0))
+                    '------------------------------------------------------------------------------
+                Else
+                    '------------------------------------------------------------------------------
+                    'Display message
+                    Me.lblStatus.Text = "Input file is not a xml file"
+                    '------------------------------------------------------------------------------
+                End If
+                '----------------------------------------------------------------------------------
+            End If
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub txtMapEditor_DragEnter(sender As Object, e As DragEventArgs) Handles txtMapEditor.DragEnter
+        '------------------------------------------------------------------------------------------
+        'Check if drag event args is file
+        If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+            '--------------------------------------------------------------------------------------
+            'Use copy as drag & drop effect
+            e.Effect = DragDropEffects.Copy
+            '--------------------------------------------------------------------------------------
+        End If
+        '------------------------------------------------------------------------------------------
+    End Sub
+
 #End Region
 
 #Region "Subs"
 
-    Shared Sub saveFile(ByVal strOutput As String(), ByVal strPath As String)
+    Public Sub openFile(ByVal strFileType As String, ByVal strPath As String)
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            Select Case strFileType
+                Case = "Map Editor"
+                    '------------------------------------------------------------------------------
+                    'Assign file name to textbox
+                    Me.txtMapEditor.Text = strPath
+
+                    'Reset Dataset
+                    Me.dsMapEditor.Reset()
+
+                    'Read data
+                    Me.dsMapEditor.ReadXml(strPath)
+
+                    'Display status
+                    Me.lblStatus.Text = strFileType & " file loaded"
+                    '------------------------------------------------------------------------------
+                Case = "Course"
+                    '------------------------------------------------------------------------------
+                    'Assign file name to textbox
+                    Me.txtCourse.Text = strPath
+
+                    'Display status
+                    Me.lblStatus.Text = strFileType & " file path specified"
+                    '------------------------------------------------------------------------------
+            End Select
+
+            'Set control display settings
+            setControlDisplaySettings()
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Public Sub saveFile(ByVal strOutput As String(), ByVal strPath As String)
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
@@ -325,7 +474,23 @@ Public Class FormMain
             '--------------------------------------------------------------------------------------
         Catch exp As Exception
             '--------------------------------------------------------------------------------------
-            FormMain.lblStatus.Text = "An error occurred: " & exp.Message
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Public Sub setControlDisplaySettings()
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Set control properties
+            If Me.txtMapEditor.Text <> "" AndAlso Me.txtCourse.Text <> "" Then Me.btnCreate.Enabled = True Else Me.btnCreate.Enabled = False
+            If Me.txtMapEditor.Text <> "" Or Me.txtCourse.Text <> "" Then Me.btnClear.Enabled = True Else Me.btnClear.Enabled = False
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
             '--------------------------------------------------------------------------------------
         End Try
         '------------------------------------------------------------------------------------------
