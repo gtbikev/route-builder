@@ -10,9 +10,9 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyTitle("Grand Theft Bike V - Route Builder")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("Grand Theft Bike V - Route Builder")>
-<Assembly: AssemblyCopyright("Copyright © 2020 murech")>
+<Assembly: AssemblyCompany("Grand Theft Bike V")>
+<Assembly: AssemblyProduct("Route Builder")>
+<Assembly: AssemblyCopyright("Copyright © 2020 Matthias Urech")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("0.1.0.0")>
-<Assembly: AssemblyFileVersion("0.1.0.0")>
+<Assembly: AssemblyVersion("0.2.0")>
+<Assembly: AssemblyFileVersion("0.2.0")>
