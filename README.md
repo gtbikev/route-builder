@@ -1,8 +1,8 @@
 # Grand Theft Bike V - Route Builder
 
-This is a route builder for [GT Bike V Mod](https://de.gta5-mods.com/scripts/). It converts the output file (xml format) of [Map Editor Mod](https://de.gta5-mods.com/scripts/map-editor) into a GT Bike V course file (json format).
+This is a route builder for [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-bike-v). It converts the output file (xml format) of [Map Editor Mod](https://de.gta5-mods.com/scripts/map-editor) into a GT Bike V course file (json format).
 
-The issues page should be primarily used for bug reports and enhancement ideas. Questions related to [Map Editor Mod](https://de.gta5-mods.com/scripts/map-editor) or [GT Bike V Mod](https://de.gta5-mods.com/scripts/) or in general are better off in forums dedicated to this purpose, like [gta5-mods.com](https://gta5-mods.com), [gtaforums.com](https://gtaforums.com) or facebook group [gt bike v](https://www.facebook.com/groups/1089053124812221/).
+The issues page should be primarily used for bug reports and enhancement ideas. Questions related to [Map Editor Mod](https://de.gta5-mods.com/scripts/map-editor) or [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-bike-v) or in general are better off in forums dedicated to this purpose, like [gta5-mods.com](https://gta5-mods.com), [gtaforums.com](https://gtaforums.com) or facebook group [gt bike v](https://www.facebook.com/groups/1089053124812221/).
 
 ## Requirements
 
