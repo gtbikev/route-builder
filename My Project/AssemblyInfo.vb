@@ -9,9 +9,9 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("Grand Theft Bike V - Route Builder")>
-<Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("Grand Theft Bike V")>
-<Assembly: AssemblyProduct("Route Builder")>
+<Assembly: AssemblyDescription("This is a route builder for Grand Theft Bike V Mod. It converts the output file (xml format) of Map Editor Mod into a Grand Theft Bike V course file (json format).")>
+<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyProduct("Grand Theft Bike V - Route Builder")>
 <Assembly: AssemblyCopyright("Copyright © 2020 Matthias Urech")>
 <Assembly: AssemblyTrademark("")>
 
