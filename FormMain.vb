@@ -1,14 +1,19 @@
-﻿Imports System.Text
+﻿Imports System.IO
+Imports System.Text
 
 Public Class FormMain
 
 #Region "Constants"
 
+    '-- DataSets
     Public dsMapEditor As New DataSet("MapEditor")
+    Public dsSettings As New DataSet("Settings")
 
 #End Region
 
 #Region "Functions"
+
+    '-- Course
 
     Public Function createCourse() As String()
         '------------------------------------------------------------------------------------------
@@ -153,22 +158,78 @@ Public Class FormMain
         '------------------------------------------------------------------------------------------
     End Function
 
+    '-- File System
+
+    Public Function getFileExists(ByVal strPath As String) As Boolean
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Declare file info object
+            Dim file As New IO.FileInfo(strPath)
+
+            'Return bolean
+            Return file.Exists
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            Return False
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Function
+
+    Public Function getFolderExists(ByVal strPath As String) As Boolean
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Declare file info ob
+            Dim file As New IO.DirectoryInfo(strPath)
+
+            'Return boolean
+            Return file.Exists
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            'Return bolean
+            Return False
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Function
+
 #End Region
 
 #Region "Events"
 
-    '-- Button
+    '-- Directory
 
-    Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
+    Private Sub btnOpenMapEditorDirectory_Click(sender As Object, e As EventArgs) Handles btnOpenMapEditorDirectory.Click
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
-            'Clear map textboxes
-            Me.txtMapEditor.Text = ""
-            Me.txtCourse.Text = ""
+            'Declare properties
+            Me.FolderBrowserDialog.Description = "Select default map editor directory"
+            Me.FolderBrowserDialog.SelectedPath = Properties.DirectoryDefaultMapEditor
+            Me.FolderBrowserDialog.ShowNewFolderButton = False
 
-            'Set control display settings
-            setControlDisplaySettings()
+            'Check if ok button has been pressed
+            If (Me.FolderBrowserDialog.ShowDialog() = Windows.Forms.DialogResult.OK) Then
+                '----------------------------------------------------------------------------------
+                'Set property
+                Properties.DirectoryDefaultMapEditor = Me.FolderBrowserDialog.SelectedPath
+
+                'Set textbox
+                Me.txtDirectoryDefaultMapEditor.Text = Properties.DirectoryDefaultMapEditor
+
+                'Update data
+                Dim objDirectoryDefaultMapEditor As Object = Properties.DirectoryDefaultMapEditor
+                editDataValue(dsSettings, "DirectoryDefault", 0, objDirectoryDefaultMapEditor)
+
+                'Save settings file
+                saveFile(Me.dsSettings.GetXml(), Properties.FileSettings)
+                '----------------------------------------------------------------------------------
+            End If
             '--------------------------------------------------------------------------------------
         Catch exp As Exception
             '--------------------------------------------------------------------------------------
@@ -178,36 +239,44 @@ Public Class FormMain
         '------------------------------------------------------------------------------------------
     End Sub
 
-    Private Sub btnCreate_Click(sender As Object, e As EventArgs) Handles btnCreate.Click
+    Private Sub btnOpenCourseDirectory_Click(sender As Object, e As EventArgs) Handles btnOpenCourseDirectory.Click
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
-            'Set hourglass cursor
-            Me.Cursor = Cursors.WaitCursor
+            'Declare properties
+            Me.FolderBrowserDialog.Description = "Select default course directory"
+            Me.FolderBrowserDialog.SelectedPath = Properties.DirectoryDefaultCourse
+            Me.FolderBrowserDialog.ShowNewFolderButton = False
 
-            'Create course
-            Dim strOutput As String() = createCourse()
+            'Check if ok button has been pressed
+            If (Me.FolderBrowserDialog.ShowDialog() = Windows.Forms.DialogResult.OK) Then
+                '----------------------------------------------------------------------------------
+                'Set property
+                Properties.DirectoryDefaultCourse = Me.FolderBrowserDialog.SelectedPath
 
-            'Save file
-            saveFile(strOutput, Me.txtCourse.Text)
+                'Set textbox
+                Me.txtDirectoryDefaultCourse.Text = Properties.DirectoryDefaultCourse
 
-            'Display status
-            Me.lblStatus.Text = "Course file created"
+                'Update data
+                Dim objDirectoryDefaultCourse As Object = Properties.DirectoryDefaultCourse
+                editDataValue(dsSettings, "DirectoryDefault", 1, objDirectoryDefaultCourse)
+
+                'Save config file
+                saveFile(Me.dsSettings.GetXml(), Properties.FileSettings)
+                '----------------------------------------------------------------------------------
+            End If
             '--------------------------------------------------------------------------------------
         Catch exp As Exception
             '--------------------------------------------------------------------------------------
             Me.lblStatus.Text = "An error occurred: " & exp.Message
             '--------------------------------------------------------------------------------------
-        Finally
-            '--------------------------------------------------------------------------------------
-            'Set default cursor
-            Me.Cursor = Cursors.Default
-            '--------------------------------------------------------------------------------------
         End Try
         '------------------------------------------------------------------------------------------
     End Sub
 
-    Private Sub btnOpen_Click(sender As Object, e As EventArgs) Handles btnOpen.Click
+    '-- File
+
+    Private Sub btnOpenMapEditorFile_Click(sender As Object, e As EventArgs) Handles btnOpenMapEditorFile.Click
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
@@ -215,7 +284,7 @@ Public Class FormMain
             Me.Cursor = Cursors.WaitCursor
 
             'Declare variable
-            Dim strInitialDirectory As String = Environment.SpecialFolder.MyDocuments
+            Dim strInitialDirectory As String = Properties.DirectoryDefaultMapEditor
 
             'Declare properties
             Me.OpenFileDialog.Title = "Open Map Editor File"
@@ -231,8 +300,8 @@ Public Class FormMain
             'Check if ok button has been pressed
             If (Me.OpenFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK) Then
                 '----------------------------------------------------------------------------------
-                'Open file
-                openFile("Map Editor", Me.OpenFileDialog.FileName)
+                'Set file
+                setFile("Map Editor", Me.OpenFileDialog.FileName)
                 '----------------------------------------------------------------------------------
             End If
             '--------------------------------------------------------------------------------------
@@ -249,7 +318,7 @@ Public Class FormMain
         '------------------------------------------------------------------------------------------
     End Sub
 
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+    Private Sub btnSaveCourseFile_Click(sender As Object, e As EventArgs) Handles btnSaveCourseFile.Click
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
@@ -258,7 +327,7 @@ Public Class FormMain
 
             'Declare variables
             Dim dsDataSet As DataSet = Nothing
-            Dim strInitialDirectory As String = Environment.SpecialFolder.MyDocuments
+            Dim strInitialDirectory As String = Properties.DirectoryDefaultCourse
 
             'Delare properties
             Me.SaveFileDialog.Title = "Save Course File"
@@ -272,8 +341,99 @@ Public Class FormMain
             'Check if ok button has been pressed
             If (Me.SaveFileDialog.ShowDialog() = Windows.Forms.DialogResult.OK) Then
                 '----------------------------------------------------------------------------------
-                'Open file
-                openFile("Course", Me.SaveFileDialog.FileName)
+                'Set file
+                setFile("Course", Me.SaveFileDialog.FileName)
+                '----------------------------------------------------------------------------------
+            End If
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        Finally
+            '--------------------------------------------------------------------------------------
+            'Set default cursor
+            Me.Cursor = Cursors.Default
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    '-- Menu
+
+    Private Sub tlbAbout_Click(sender As Object, e As EventArgs) Handles tlbAbout.Click
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Open url in browser
+            Process.Start(Properties.InfoUrlAbout)
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub tlbClearAll_Click(sender As Object, e As EventArgs) Handles tlbClearAll.Click
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Reset controls
+            Me.rdbGenerateFileName.Checked = True
+            Me.txtMapEditorFileName.Text = ""
+            Me.txtGenerateCourseFileName.Text = ""
+            Me.txtSpecifyCourseFileName.Text = ""
+
+            'Clear properties
+            Properties.FileMapEditor = ""
+            Properties.FileCourse = ""
+
+            'Set control display settings
+            setControlDisplaySettings("Toolbar")
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub tlbSendFeedback_Click(sender As Object, e As EventArgs) Handles tlbSendFeedback.Click
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Open url in browser
+            Process.Start(Properties.InfoUrlSendFeedback)
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub tlbStart_Click(sender As Object, e As EventArgs) Handles tlbStart.Click
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Validate input
+            If Properties.FileMapEditor <> "" AndAlso Properties.FileCourse <> "" Then
+                '----------------------------------------------------------------------------------
+                'Set hourglass cursor
+                Me.Cursor = Cursors.WaitCursor
+
+                'Create course
+                Dim strOutput As String() = createCourse()
+
+                'Save file
+                saveFile(strOutput, Properties.FileCourse)
+
+                'Display status
+                Me.lblStatus.Text = "Course file created"
                 '----------------------------------------------------------------------------------
             End If
             '--------------------------------------------------------------------------------------
@@ -292,51 +452,53 @@ Public Class FormMain
 
     '-- Form
 
-    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub FormMain_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles Me.KeyDown
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
-            'Set application name and version
-            Me.lblApplication.Text = My.Application.Info.ProductName & " " & System.Windows.Forms.Application.ProductVersion
+            'Handle function keys
+            Select Case e.KeyCode
+                Case = Keys.F1
+                    '------------------------------------------------------------------------------
+                    'Call button tlbAbout_Click
+                    tlbAbout_Click(sender, e) : e.Handled = True
+                    '------------------------------------------------------------------------------
+                Case = Keys.F2
+                    '------------------------------------------------------------------------------
+                    'Call button tlbSendFeedback_Click
+                    tlbSendFeedback_Click(sender, e) : e.Handled = True
+                    '------------------------------------------------------------------------------
+                Case = Keys.F5
+                    '------------------------------------------------------------------------------
+                    'Call button tlbStart_Click
+                    tlbStart_Click(sender, e) : e.Handled = True
+                    '------------------------------------------------------------------------------
+                Case = Keys.F12
+                    '------------------------------------------------------------------------------
+                    'Open form debug console
+                    'Dim frmDebug As New FormDebugConsole() : frmDebug.Show() :
+                    e.Handled = True
+                    '------------------------------------------------------------------------------
+            End Select
 
-            'Set control display settings
-            setControlDisplaySettings()
-            '--------------------------------------------------------------------------------------
-        Catch exp As Exception
-            '--------------------------------------------------------------------------------------
-            Me.lblStatus.Text = "An error occurred: " & exp.Message
-            '--------------------------------------------------------------------------------------
-        End Try
-        '------------------------------------------------------------------------------------------
-    End Sub
-
-    '-- Textbox
-
-    Private Sub txtCourse_DragDrop(sender As Object, e As DragEventArgs) Handles txtCourse.DragDrop
-        '------------------------------------------------------------------------------------------
-        Try
-            '--------------------------------------------------------------------------------------
-            'Activate form
-            Me.Activate()
-
-            'Check if drag event args is file
-            If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+            'Handel delete key
+            If e.KeyCode = Keys.Delete Then
                 '----------------------------------------------------------------------------------
-                'Declare file info object
-                Dim file As New IO.FileInfo(e.Data.GetData(DataFormats.FileDrop)(0))
+                tlbClearAll_Click(sender, e) : e.Handled = True
+                '----------------------------------------------------------------------------------
+            End If
 
-                'Verify if file is .xml
-                If file.Extension = ".json" Then
-                    '------------------------------------------------------------------------------
-                    'Open file
-                    openFile("Course", e.Data.GetData(DataFormats.FileDrop)(0))
-                    '------------------------------------------------------------------------------
-                Else
-                    '------------------------------------------------------------------------------
-                    'Display message
-                    Me.lblStatus.Text = "Input file is not a json file"
-                    '------------------------------------------------------------------------------
-                End If
+            'Handle control + key
+            If ((e.Modifiers = (Keys.Control)) AndAlso (e.KeyCode = Keys.O)) Then
+                '----------------------------------------------------------------------------------
+                'Call button btnOpenMapEditorFile
+                btnOpenMapEditorFile_Click(sender, e) : e.Handled = True
+                '----------------------------------------------------------------------------------
+            End If
+            If ((e.Modifiers = (Keys.Control)) AndAlso (e.KeyCode = Keys.S)) Then
+                '----------------------------------------------------------------------------------
+                'Call button btnSaveCourseFile
+                btnSaveCourseFile_Click(sender, e) : e.Handled = True
                 '----------------------------------------------------------------------------------
             End If
             '--------------------------------------------------------------------------------------
@@ -348,19 +510,69 @@ Public Class FormMain
         '------------------------------------------------------------------------------------------
     End Sub
 
-    Private Sub txtCourse_DragEnter(sender As Object, e As DragEventArgs) Handles txtCourse.DragEnter
+    Private Sub FormMain_Load(sender As Object, e As EventArgs) Handles Me.Load
         '------------------------------------------------------------------------------------------
-        'Check if drag event args is file
-        If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+        Try
             '--------------------------------------------------------------------------------------
-            'Use copy as drag & drop effect
-            e.Effect = DragDropEffects.Copy
+            'Initialization
+            setInitialization()
+
+            'Set control display settings
+            setControlDisplaySettings("Toolbar")
             '--------------------------------------------------------------------------------------
-        End If
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
         '------------------------------------------------------------------------------------------
     End Sub
 
-    Private Sub txtMapEditor_DragDrop(sender As Object, e As DragEventArgs) Handles txtMapEditor.DragDrop
+    '-- Radiobutton
+
+    Private Sub rdbGenerateFileName_CheckedChanged(sender As Object, e As EventArgs)
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Verify if radio button is checked
+            If Me.rdbGenerateFileName.Checked = True Then
+                '----------------------------------------------------------------------------------
+                'Set property
+                Properties.FileCourse = Me.txtGenerateCourseFileName.Text
+                '----------------------------------------------------------------------------------
+            End If
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub rdbSpecifyFileName_CheckedChanged(sender As Object, e As EventArgs) Handles rdbSpecifyFileName.CheckedChanged
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Verify if radio button is checked
+            If Me.rdbSpecifyFileName.Checked = True Then
+                '----------------------------------------------------------------------------------
+                'Set property
+                Properties.FileCourse = Me.txtSpecifyCourseFileName.Text
+                '----------------------------------------------------------------------------------
+            End If
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    '-- Textbox
+
+    Private Sub txtMapEditorFileName_DragDrop(sender As Object, e As DragEventArgs) Handles txtMapEditorFileName.DragDrop
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
@@ -376,8 +588,8 @@ Public Class FormMain
                 'Verify if file is .xml
                 If file.Extension = ".xml" Then
                     '------------------------------------------------------------------------------
-                    'Open file
-                    openFile("Map Editor", e.Data.GetData(DataFormats.FileDrop)(0))
+                    'Set file
+                    setFile("Map Editor", e.Data.GetData(DataFormats.FileDrop)(0))
                     '------------------------------------------------------------------------------
                 Else
                     '------------------------------------------------------------------------------
@@ -396,7 +608,55 @@ Public Class FormMain
         '------------------------------------------------------------------------------------------
     End Sub
 
-    Private Sub txtMapEditor_DragEnter(sender As Object, e As DragEventArgs) Handles txtMapEditor.DragEnter
+    Private Sub txtMapEditorFileName_DragEnter(sender As Object, e As DragEventArgs) Handles txtMapEditorFileName.DragEnter
+        '------------------------------------------------------------------------------------------
+        'Check if drag event args is file
+        If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+            '--------------------------------------------------------------------------------------
+            'Use copy as drag & drop effect
+            e.Effect = DragDropEffects.Copy
+            '--------------------------------------------------------------------------------------
+        End If
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub txtSpecifyCourseFileName_DragDrop(sender As Object, e As DragEventArgs) Handles txtSpecifyCourseFileName.DragDrop
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Activate form
+            Me.Activate()
+
+            'Check if drag event args is file
+            If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
+                '----------------------------------------------------------------------------------
+                'Declare file info object
+                Dim file As New IO.FileInfo(e.Data.GetData(DataFormats.FileDrop)(0))
+
+                'Verify if file is .xml
+                If file.Extension = ".json" Then
+                    '------------------------------------------------------------------------------
+                    'Set file
+                    setFile("Course", e.Data.GetData(DataFormats.FileDrop)(0))
+                    '------------------------------------------------------------------------------
+                Else
+                    '------------------------------------------------------------------------------
+                    'Display message
+                    Me.lblStatus.Text = "Input file is not a json file"
+                    '------------------------------------------------------------------------------
+                End If
+                '----------------------------------------------------------------------------------
+            End If
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Private Sub txtSpecifyCourseFileName_DragEnter(sender As Object, e As DragEventArgs) Handles txtSpecifyCourseFileName.DragEnter
         '------------------------------------------------------------------------------------------
         'Check if drag event args is file
         If (e.Data.GetDataPresent(DataFormats.FileDrop)) Then
@@ -412,37 +672,163 @@ Public Class FormMain
 
 #Region "Subs"
 
-    Public Sub openFile(ByVal strFileType As String, ByVal strPath As String)
+    '-- Data
+
+    Shared Sub editDataValue(ByVal dsDataSet As DataSet, ByVal strDataTable As String, ByVal intDataColumn As Integer, ByVal objDataValue As Object)
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
-            Select Case strFileType
-                Case = "Map Editor"
+            'Declare objects and variables
+            Dim dtDataTable As DataTable = dsDataSet.Tables(strDataTable)
+            Dim drDataRow As DataRow = dtDataTable.Rows(0)
+            Dim strDataValue As String = ""
+
+            'Check if ID column is not null
+            If Not drDataRow.IsNull(0) Then
+                '----------------------------------------------------------------------------------
+                If TypeOf drDataRow(dsDataSet.Tables(strDataTable).Columns(intDataColumn)) Is String Then
+                    drDataRow(dsDataSet.Tables(strDataTable).Columns(intDataColumn)) = CStr(objDataValue)
+                End If
+                '----------------------------------------------------------------------------------
+                If TypeOf drDataRow(dsDataSet.Tables(strDataTable).Columns(intDataColumn)) Is Integer Then
+                    drDataRow(dsDataSet.Tables(strDataTable).Columns(intDataColumn)) = CInt(objDataValue)
+                End If
+                '----------------------------------------------------------------------------------
+                If TypeOf drDataRow(dsDataSet.Tables(strDataTable).Columns(intDataColumn)) Is Boolean Then
+                    drDataRow(dsDataSet.Tables(strDataTable).Columns(intDataColumn)) = CBool(objDataValue)
+                End If
+                '----------------------------------------------------------------------------------
+                If drDataRow(dsDataSet.Tables(strDataTable).Columns(intDataColumn)) Is System.DBNull.Value Then
+                    drDataRow(dsDataSet.Tables(strDataTable).Columns(intDataColumn)) = ""
+                End If
+                '----------------------------------------------------------------------------------
+            End If
+
+            'Add new row permanently in data table
+            dsDataSet.AcceptChanges()
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            FormMain.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    '-- Initialization
+
+    Public Sub setInitialization()
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Initialize
+            setPropertySettings()
+            readFileSettings()
+            setControlSettings()
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Public Sub setControlSettings()
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Set application name and version
+            Me.Text = Properties.InfoVersion
+            '--------------------------------------------------------------------------------------
+            'Verify file settings
+            If Properties.ValidateFileSettings = False Then Exit Sub
+            '--------------------------------------------------------------------------------------
+            'Set variable
+            Dim strDataTable As String = String.Empty
+
+            'Set directory default properties
+            strDataTable = "DirectoryDefault"
+            Select Case Me.dsSettings.Tables(strDataTable).Rows.Count
+                '----------------------------------------------------------------------------------
+                Case 1
                     '------------------------------------------------------------------------------
-                    'Assign file name to textbox
-                    Me.txtMapEditor.Text = strPath
-
-                    'Reset Dataset
-                    Me.dsMapEditor.Reset()
-
-                    'Read data
-                    Me.dsMapEditor.ReadXml(strPath)
-
-                    'Display status
-                    Me.lblStatus.Text = strFileType & " file loaded"
+                    'Validate folders
+                    If getFolderExists(Me.dsSettings.Tables(strDataTable).Rows(0)("DirectoryDefaultMapEditor")) Then
+                        '--------------------------------------------------------------------------
+                        Properties.DirectoryDefaultMapEditor = Me.dsSettings.Tables(strDataTable).Rows(0)("DirectoryDefaultMapEditor")
+                        '--------------------------------------------------------------------------
+                    Else
+                        '--------------------------------------------------------------------------
+                        Properties.DirectoryDefaultMapEditor = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+                        '--------------------------------------------------------------------------
+                    End If
+                    If getFolderExists(Me.dsSettings.Tables(strDataTable).Rows(0)("DirectoryDefaultCourse")) Then
+                        '--------------------------------------------------------------------------
+                        Properties.DirectoryDefaultCourse = Me.dsSettings.Tables(strDataTable).Rows(0)("DirectoryDefaultCourse")
+                        '--------------------------------------------------------------------------
+                    Else
+                        '--------------------------------------------------------------------------
+                        Properties.DirectoryDefaultCourse = My.Computer.FileSystem.SpecialDirectories.MyDocuments
+                        '--------------------------------------------------------------------------
+                    End If
                     '------------------------------------------------------------------------------
-                Case = "Course"
+                Case Else
                     '------------------------------------------------------------------------------
-                    'Assign file name to textbox
-                    Me.txtCourse.Text = strPath
-
-                    'Display status
-                    Me.lblStatus.Text = strFileType & " file path specified"
+                    'Set default in case no entry found
+                    Properties.DirectoryDefaultMapEditor = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
+                    Properties.DirectoryDefaultCourse = My.Computer.FileSystem.SpecialDirectories.MyDocuments
                     '------------------------------------------------------------------------------
             End Select
 
-            'Set control display settings
-            setControlDisplaySettings()
+            'Set default directories
+            Me.txtDirectoryDefaultMapEditor.Text = Properties.DirectoryDefaultMapEditor
+            Me.txtDirectoryDefaultCourse.Text = Properties.DirectoryDefaultCourse
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    Public Sub setPropertySettings()
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Set application properties
+            Properties.InfoAssemblyName = My.Application.Info.AssemblyName
+            Properties.InfoDirectoryPath = My.Application.Info.DirectoryPath
+            Properties.InfoUrlAbout = "https://github.com/gtbikev/route-builder"
+            Properties.InfoUrlSendFeedback = "https://github.com/gtbikev/route-builder/issues"
+            Properties.InfoVersion = My.Application.Info.ProductName & " " & System.Windows.Forms.Application.ProductVersion
+
+            'Set file properties
+            Properties.FileSettings = Properties.InfoDirectoryPath & "\" & Properties.InfoAssemblyName & ".config"
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    '-- File System
+
+    Public Sub saveFile(ByVal strOutput As String, ByVal strPath As String)
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Declare and initialize StreamWriter
+            Dim swOutputFile As New IO.StreamWriter(strPath, False, New UTF8Encoding(False))
+
+            'Write content to file
+            swOutputFile.Write(strOutput)
+
+            'Close StreamWriter
+            swOutputFile.Close()
             '--------------------------------------------------------------------------------------
         Catch exp As Exception
             '--------------------------------------------------------------------------------------
@@ -480,17 +866,113 @@ Public Class FormMain
         '------------------------------------------------------------------------------------------
     End Sub
 
-    Public Sub setControlDisplaySettings()
+    Public Sub setFile(ByVal strFileType As String, ByVal strPath As String)
         '------------------------------------------------------------------------------------------
         Try
             '--------------------------------------------------------------------------------------
-            'Set control properties
-            If Me.txtMapEditor.Text <> "" AndAlso Me.txtCourse.Text <> "" Then Me.btnCreate.Enabled = True Else Me.btnCreate.Enabled = False
-            If Me.txtMapEditor.Text <> "" Or Me.txtCourse.Text <> "" Then Me.btnClear.Enabled = True Else Me.btnClear.Enabled = False
+            Select Case strFileType
+                Case = "Map Editor"
+                    '------------------------------------------------------------------------------
+                    'Set property
+                    Properties.FileMapEditor = strPath
+
+                    'Assign file name to textbox
+                    Me.txtMapEditorFileName.Text = Properties.FileMapEditor
+
+                    'Read data
+                    Me.dsMapEditor.Reset()
+                    Me.dsMapEditor.ReadXml(strPath)
+
+                    'Display status
+                    Me.lblStatus.Text = strFileType & " file loaded"
+                    '------------------------------------------------------------------------------
+                Case = "Course"
+                    '------------------------------------------------------------------------------
+                    'Set property
+                    Properties.FileCourse = strPath
+
+                    'Assign file name to textbox
+                    Me.txtSpecifyCourseFileName.Text = Properties.FileCourse
+
+                    'Check radio button
+                    Me.rdbSpecifyFileName.Checked = True
+
+                    'Display status
+                    Me.lblStatus.Text = strFileType & " file path specified"
+                    '------------------------------------------------------------------------------
+            End Select
+
+            'Set control display settings
+            setControlDisplaySettings("Toolbar")
             '--------------------------------------------------------------------------------------
         Catch exp As Exception
             '--------------------------------------------------------------------------------------
             Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    '-- Menu and Status Control
+
+    Public Sub setControlDisplaySettings(ByVal strControlDisplaySettings As String)
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            Select Case strControlDisplaySettings
+                Case = ""
+                    '------------------------------------------------------------------------------
+                    '------------------------------------------------------------------------------
+                Case = "Toolbar"
+                    '------------------------------------------------------------------------------
+                    'Set control properties
+                    If Properties.FileMapEditor <> "" Or Properties.FileCourse <> "" Then Me.tlbClearAll.Enabled = True Else Me.tlbClearAll.Enabled = False
+                    If Properties.FileMapEditor <> "" AndAlso Properties.FileCourse <> "" Then Me.tlbStart.Enabled = True Else Me.tlbStart.Enabled = False
+                    '------------------------------------------------------------------------------
+            End Select
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            Me.lblStatus.Text = "An error occurred: " & exp.Message
+            '--------------------------------------------------------------------------------------
+        End Try
+        '------------------------------------------------------------------------------------------
+    End Sub
+
+    '-- Settings
+
+    Public Sub readFileSettings()
+        '------------------------------------------------------------------------------------------
+        Try
+            '--------------------------------------------------------------------------------------
+            'Verify if config file exist
+            If getFileExists(Properties.FileSettings) = True Then
+                '----------------------------------------------------------------------------------
+                'Read configuration
+                Me.dsSettings.Reset()
+                Me.dsSettings.ReadXml(Properties.FileSettings)
+                '----------------------------------------------------------------------------------
+            Else
+                '----------------------------------------------------------------------------------
+                Throw New System.Exception("MissingConfigFile")
+                '----------------------------------------------------------------------------------
+            End If
+
+            'Set validation flag
+            Properties.ValidateFileSettings = True
+            '--------------------------------------------------------------------------------------
+        Catch exp As Exception
+            '--------------------------------------------------------------------------------------
+            'Set validation flag
+            Properties.ValidateFileSettings = False
+
+            'Disable controls
+            Me.grbMapEditor.Enabled = False
+            Me.grbCourse.Enabled = False
+            Me.grbDefaultDirectories.Enabled = False
+
+            'Display status
+            Me.lblStatus.Text = "Configuration file does not exist. Please reinstall " & Properties.InfoVersion & "."
             '--------------------------------------------------------------------------------------
         End Try
         '------------------------------------------------------------------------------------------

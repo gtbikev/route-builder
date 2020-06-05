@@ -1,6 +1,7 @@
 # Visual Studio cache files
 .vs/
 bin/
+img/
 ipch/
 obj/
 *.aps
@@ -12,3 +13,5 @@ obj/
 *.user
 *.sdf
 *.suo
+FormDebug*.vb
+FormDebug*.resx
