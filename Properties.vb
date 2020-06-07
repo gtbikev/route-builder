@@ -67,49 +67,6 @@
         '--------------------------------------------------------------------------------------
     End Property
 
-    '-- Control
-    Protected Shared blnControlGenerateFileChecked As Boolean
-
-    Shared Property ControlGenerateFileChecked() As Boolean
-        '--------------------------------------------------------------------------------------
-        Get
-            Return blnControlGenerateFileChecked
-        End Get
-        '--------------------------------------------------------------------------------------
-        Set(ByVal blnValue As Boolean)
-            blnControlGenerateFileChecked = blnValue
-        End Set
-        '--------------------------------------------------------------------------------------
-    End Property
-
-    '-- Directory
-    Protected Shared strDirectoryDefaultMapEditor As String
-    Protected Shared strDirectoryDefaultCourse As String
-
-    Shared Property DirectoryDefaultCourse() As String
-        '--------------------------------------------------------------------------------------
-        Get
-            Return strDirectoryDefaultCourse
-        End Get
-        '--------------------------------------------------------------------------------------
-        Set(ByVal strValue As String)
-            strDirectoryDefaultCourse = strValue
-        End Set
-        '--------------------------------------------------------------------------------------
-    End Property
-
-    Shared Property DirectoryDefaultMapEditor() As String
-        '--------------------------------------------------------------------------------------
-        Get
-            Return strDirectoryDefaultMapEditor
-        End Get
-        '--------------------------------------------------------------------------------------
-        Set(ByVal strValue As String)
-            strDirectoryDefaultMapEditor = strValue
-        End Set
-        '--------------------------------------------------------------------------------------
-    End Property
-
     '-- File
     Protected Shared strFileCourse As String
     Protected Shared strFileMapEditor As String
@@ -151,18 +108,60 @@
         '--------------------------------------------------------------------------------------
     End Property
 
-    '-- Validation
-    Protected Shared blnValidateFileSettings As Boolean
+    '-- Options
+    Protected Shared strDefaultDefaultDirectoryCourse As String
+    Protected Shared strDefaultDirectoryMapEditor As String
+    Protected Shared blnDefaultGenerateFileName As Boolean
 
-    Shared Property ValidateFileSettings() As Boolean
+    Shared Property DefaultDirectoryCourse() As String
         '--------------------------------------------------------------------------------------
         Get
-            Return blnValidateFileSettings
+            Return strDefaultDefaultDirectoryCourse
         End Get
         '--------------------------------------------------------------------------------------
-        Set(ByVal blnValue As Boolean)
-            blnValidateFileSettings = blnValue
+        Set(ByVal strValue As String)
+            strDefaultDefaultDirectoryCourse = strValue
         End Set
         '--------------------------------------------------------------------------------------
     End Property
+
+    Shared Property DefaultDirectoryMapEditor() As String
+        '--------------------------------------------------------------------------------------
+        Get
+            Return strDefaultDirectoryMapEditor
+        End Get
+        '--------------------------------------------------------------------------------------
+        Set(ByVal strValue As String)
+            strDefaultDirectoryMapEditor = strValue
+        End Set
+        '--------------------------------------------------------------------------------------
+    End Property
+
+    Shared Property DefaultGenerateFileName() As Boolean
+        '--------------------------------------------------------------------------------------
+        Get
+            Return blnDefaultGenerateFileName
+        End Get
+        '--------------------------------------------------------------------------------------
+        Set(ByVal blnValue As Boolean)
+            blnDefaultGenerateFileName = blnValue
+        End Set
+        '--------------------------------------------------------------------------------------
+    End Property
+
+    '-- Validation
+    Protected Shared blnValidInputFile As Boolean
+
+    Shared Property ValidInputFile() As Boolean
+        '--------------------------------------------------------------------------------------
+        Get
+            Return blnValidInputFile
+        End Get
+        '--------------------------------------------------------------------------------------
+        Set(ByVal blnValue As Boolean)
+            blnValidInputFile = blnValue
+        End Set
+        '--------------------------------------------------------------------------------------
+    End Property
+
 End Class
