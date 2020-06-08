@@ -4,14 +4,6 @@ This is a route builder for [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-
 
 ![Grand Theft Bike V - Route Builder](https://github.com/gtbikev/docs/blob/master/route-builder/images/route-builder.png)
 
-## Requirements
-
-| Software                                                                        | Version |
-| :------------------------------------------------------------------------------ | :------ |
-| [.NET Framework](https://dotnet.microsoft.com/download/dotnet-framework/net472) | 4.7.2   |
-| [Map Editor Mod](https://de.gta5-mods.com/scripts/map-editor)                   | 2.13    |
-| [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-bike-v)                     | 0.2.3   |
-
 ## Download
 
 Download **Route Builder** from the [release](https://github.com/gtbikev/route-builder/releases) page.
@@ -22,6 +14,14 @@ To get the most out of **Route Builder**, start by reviewing a few introductory 
 * [Setup](https://github.com/gtbikev/docs/blob/master/route-builder/SETUP.md)
 * [Getting Started](https://github.com/gtbikev/docs/blob/master/route-builder/GETTING-STARTED.md)
 * [Shortcuts](https://github.com/gtbikev/docs/blob/master/route-builder/SHORTCUTS.md)
+
+## Requirements
+
+| Software                                                                        | Version |
+| :------------------------------------------------------------------------------ | :------ |
+| [.NET Framework](https://dotnet.microsoft.com/download/dotnet-framework/net472) | 4.7.2   |
+| [Map Editor Mod](https://de.gta5-mods.com/scripts/map-editor)                   | 2.13    |
+| [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-bike-v)                     | 0.2.3   |
 
 ## Feedback
 
