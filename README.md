@@ -14,6 +14,7 @@ To get the most out of **Route Builder**, start by reviewing a few introductory 
 * [Setup](https://github.com/gtbikev/docs/blob/master/route-builder/SETUP.md)
 * [Getting Started](https://github.com/gtbikev/docs/blob/master/route-builder/GETTING-STARTED.md)
 * [Shortcuts](https://github.com/gtbikev/docs/blob/master/route-builder/SHORTCUTS.md)
+* [Settings](https://github.com/gtbikev/docs/blob/master/route-builder/SETTINGS.md)
 
 ## Requirements
 

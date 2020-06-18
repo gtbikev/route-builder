@@ -6,8 +6,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7450FEA3-F7CD-4144-8C0A-09E95305E346}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>GTBikeRouteBuilder.My.MyApplication</StartupObject>
-    <RootNamespace>GTBikeRouteBuilder</RootNamespace>
+    <StartupObject>My.MyApplication</StartupObject>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>GTBikeVRouteBuilder</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
@@ -80,6 +81,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoreLib.vb" />
     <Compile Include="Properties.vb" />
     <Compile Include="FormMain.vb">
       <SubType>Form</SubType>
