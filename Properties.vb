@@ -3,7 +3,7 @@
     '-- Application Info
     Protected Shared strInfoAssemblyName As String
     Protected Shared strInfoDirectoryPath As String
-    Protected Shared strInfoUrlAbout As String
+    Protected Shared strInfoUrlHelp As String
     Protected Shared strInfoUrlSendFeedback As String
     Protected Shared strInfoVersion As String
 
@@ -31,14 +31,14 @@
         '--------------------------------------------------------------------------------------
     End Property
 
-    Shared Property InfoUrlAbout() As String
+    Shared Property InfoUrlHelp() As String
         '--------------------------------------------------------------------------------------
         Get
-            Return strInfoUrlAbout
+            Return strInfoUrlHelp
         End Get
         '--------------------------------------------------------------------------------------
         Set(ByVal strValue As String)
-            strInfoUrlAbout = strValue
+            strInfoUrlHelp = strValue
         End Set
         '--------------------------------------------------------------------------------------
     End Property
@@ -108,10 +108,39 @@
         '--------------------------------------------------------------------------------------
     End Property
 
-    '-- Options
+    '-- Settings
+    Protected Shared blnDebugShowWindow As Boolean
+    Protected Shared blnDefaultGenerateFileName As Boolean
+    Protected Shared blnOffsetEnabled As Boolean
+    Protected Shared decXOffset As Decimal
+    Protected Shared decYOffset As Decimal
+    Protected Shared decZOffset As Decimal
     Protected Shared strDefaultDefaultDirectoryCourse As String
     Protected Shared strDefaultDirectoryMapEditor As String
-    Protected Shared blnDefaultGenerateFileName As Boolean
+
+    Shared Property DebugShowWindow() As Boolean
+        '--------------------------------------------------------------------------------------
+        Get
+            Return blnDebugShowWindow
+        End Get
+        '--------------------------------------------------------------------------------------
+        Set(ByVal blnValue As Boolean)
+            blnDebugShowWindow = blnValue
+        End Set
+        '--------------------------------------------------------------------------------------
+    End Property
+
+    Shared Property DefaultGenerateFileName() As Boolean
+        '--------------------------------------------------------------------------------------
+        Get
+            Return blnDefaultGenerateFileName
+        End Get
+        '--------------------------------------------------------------------------------------
+        Set(ByVal blnValue As Boolean)
+            blnDefaultGenerateFileName = blnValue
+        End Set
+        '--------------------------------------------------------------------------------------
+    End Property
 
     Shared Property DefaultDirectoryCourse() As String
         '--------------------------------------------------------------------------------------
@@ -137,14 +166,50 @@
         '--------------------------------------------------------------------------------------
     End Property
 
-    Shared Property DefaultGenerateFileName() As Boolean
+    Shared Property OffsetEnabled() As Boolean
         '--------------------------------------------------------------------------------------
         Get
-            Return blnDefaultGenerateFileName
+            Return blnOffsetEnabled
         End Get
         '--------------------------------------------------------------------------------------
         Set(ByVal blnValue As Boolean)
-            blnDefaultGenerateFileName = blnValue
+            blnOffsetEnabled = blnValue
+        End Set
+        '--------------------------------------------------------------------------------------
+    End Property
+
+    Shared Property XOffset() As Decimal
+        '--------------------------------------------------------------------------------------
+        Get
+            Return decXOffset
+        End Get
+        '--------------------------------------------------------------------------------------
+        Set(ByVal decValue As Decimal)
+            decXOffset = decValue
+        End Set
+        '--------------------------------------------------------------------------------------
+    End Property
+
+    Shared Property YOffset() As Decimal
+        '--------------------------------------------------------------------------------------
+        Get
+            Return decYOffset
+        End Get
+        '--------------------------------------------------------------------------------------
+        Set(ByVal decValue As Decimal)
+            decYOffset = decValue
+        End Set
+        '--------------------------------------------------------------------------------------
+    End Property
+
+    Shared Property ZOffset() As Decimal
+        '--------------------------------------------------------------------------------------
+        Get
+            Return decZOffset
+        End Get
+        '--------------------------------------------------------------------------------------
+        Set(ByVal decValue As Decimal)
+            decZOffset = decValue
         End Set
         '--------------------------------------------------------------------------------------
     End Property
