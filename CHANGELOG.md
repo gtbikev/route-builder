@@ -1,6 +1,28 @@
 # Route Builder - Changelog
 This changelog goes through all the changes that have been made in each release.
 
+## v0.3.0 (2020-06-18)
+
+General
+* Updated GUI with window control buttons, sizeable window, status bar
+* Replace toolbar button `info` with `help` pointing to documentation
+* Code refactoring with improved exception handling
+* [Settings](https://github.com/gtbikev/docs/blob/master/route-builder/SETTINGS.md) documentation
+
+Convert Route
+* Merge generate and specify textbox, move set course file button for better user experience
+* Debug window for displaying output and map editor dataset
+* Apply offsets for waypoints on X, Y, Z axis
+
+Settings
+* New settings GUI with treeview and pages
+* New setting `Show Debug Window` to enable/disable debug window
+* New setting `Enable Offsets` to apply specified offsets to waypoints
+* New setting `X Offset` to apply X offset for each waypoint
+* New setting `Y Offset` to apply Y offset for each waypoint
+* New setting `Z Offset` to apply Z offset for each waypoint
+
+
 ## v0.2.0 (2020-06-08)
 
 General
