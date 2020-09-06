@@ -22,7 +22,7 @@ To get the most out of **Route Builder**, start by reviewing a few introductory 
 | :------------------------------------------------------------------------------ | :------ |
 | [.NET Framework](https://dotnet.microsoft.com/download/dotnet-framework/net472) | 4.7.2   |
 | [Map Editor Mod](https://de.gta5-mods.com/scripts/map-editor)                   | 2.13    |
-| [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-bike-v)                     | 0.2.3   |
+| [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-bike-v)                     | 0.3.0.2 |
 
 ## Feedback
 
