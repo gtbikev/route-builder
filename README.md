@@ -1,5 +1,7 @@
 # Grand Theft Bike V - Route Builder
 
+> **There will be no more updates for route builder. This repository is archived (read-only).**
+
 This is a route builder for [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-bike-v). It converts [Map Editor Mod](https://de.gta5-mods.com/scripts/map-editor) file (xml format) into a [GT Bike V Mod](https://de.gta5-mods.com/scripts/gt-bike-v) course file (json format).
 
 ![Grand Theft Bike V - Route Builder](https://github.com/gtbikev/docs/blob/master/route-builder/images/route-builder.png)
